@@ -1,7 +1,6 @@
 /* eslint-disable semi */
 <template>
   <el-container class="project">
-    {{bannerList}}
     <el-tabs v-model="tabName"
              @tab-click="handleClick">
       <template v-for="(tab,tabIndex) in tabList">
@@ -130,7 +129,6 @@ export default {
       }
     },
     deleteHandler (bannerIndex) {
-      console.log(bannerIndex, '0000')
       this.bannerList.splice(bannerIndex, 1)
       if (this.bannerList.length <= 5) {
         this.showAddBtn = true
@@ -228,7 +226,6 @@ export default {
   margin-bottom: 30px;
   width: 100%;
   height: 150px;
-  // border: 1px solid red;
 }
 
 .add-btn {
@@ -248,7 +245,6 @@ export default {
 .box-item {
   width: 50%;
   text-align: left;
-  // border: 1px solid red;
 }
 
 .box-item-top {
