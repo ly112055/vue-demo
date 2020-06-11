@@ -1,15 +1,15 @@
 /* eslint-disable semi */
 <template>
   <el-container class="project">
-    {{textList}}
+    {{bannerList}}
     <el-tabs v-model="tabName"
              @tab-click="handleClick">
       <template v-for="(tab,tabIndex) in tabList">
         <el-tab-pane :key="tabIndex"
                      :label="tab.label"
                      :name="tab.name">
-          <div v-for="(text,textIndex) in textList"
-               :key="textIndex"
+          <div v-for="(banner,bannerIndex) in bannerList"
+               :key="bannerIndex"
                class="box">
             <div class="box-item">
               <div class="box-item-top">
@@ -18,27 +18,30 @@
                            :auto-upload="false"
                            :show-file-list="false"
                            :on-change="selectNoticeImg">
-                  <img v-if=" text.text1!== ''"
-                       :src="text.text1"
+                  <img v-if=" banner.user.imgUrl!== ''"
+                       :src="banner.user.imgUrl"
                        class="avatar" />
                   <i v-else
                      class="el-icon-plus avatar-uploader-icon"></i>
                 </el-upload>
                 <div class="btns-box">
+                  <el-button type="primary"
+                             size="mini">预览</el-button>
                   <el-button type="danger"
                              size="mini"
-                             @click="deleteHandler(textIndex)">删除</el-button>
-                  <el-switch v-model="valueList[textIndex]"
+                             @click="deleteHandler(bannerIndex,'user')">删除</el-button>
+                  <el-switch v-model="valueList[bannerIndex]"
                              active-color="#13ce66"
                              inactive-color="#ddd">
                   </el-switch>
                 </div>
               </div>
               <div class="box-item-bottom">
-                跳转链接：<el-input size="mini"></el-input>
+                跳转链接：<el-input v-model="banner.user.toUrl"
+                          size="mini"></el-input>
               </div>
             </div>
-            <div v-if="valueList[textIndex]===true"
+            <div v-if="valueList[bannerIndex]===true"
                  class="box-item">
               <div class="box-item-top">
                 <el-upload action=""
@@ -46,26 +49,29 @@
                            :auto-upload="false"
                            :show-file-list="false"
                            :on-change="selectNoticeImg">
-                  <img v-if=" text.text2!== ''"
-                       :src="text.text2"
+                  <img v-if=" banner.vip.imgUrl!== ''"
+                       :src="banner.vip.imgUrl"
                        class="avatar" />
                   <i v-else
                      class="el-icon-plus avatar-uploader-icon"></i>
                 </el-upload>
                 <div class="btns-box">
+                  <el-button type="primary"
+                             size="mini">预览</el-button>
                   <el-button type="danger"
                              size="mini"
-                             @click="deleteHandler(textIndex)">删除</el-button>
+                             @click="deleteHandler(bannerIndex,'vip')">删除</el-button>
                 </div>
               </div>
               <div class="box-item-bottom">
-                跳转链接：<el-input size="mini"></el-input>
+                跳转链接：<el-input v-model="banner.vip.toUrl"
+                          size="mini"></el-input>
               </div>
             </div>
           </div>
           <div v-if="showAddBtn"
                class="add-btn"
-               @click="addItem">添加</div>
+               @click="addItem"><i class="el-icon-plus"></i></div>
         </el-tab-pane>
       </template>
     </el-tabs>
@@ -77,7 +83,7 @@ export default {
     return {
       num: 1,
       showAddBtn: true,
-      textList: [],
+      bannerList: [],
       valueList: [],
       tabName: 'first', // 初始化默认选中第一个tab
       tabList: [
@@ -90,79 +96,118 @@ export default {
   },
   mounted () {
     console.log('第一个')
-    this.textList = [
+    this.bannerList = [
       {
-        text1:
-          'https://ipi-mzh.oss-cn-hangzhou.aliyuncs.com/file/upload/mango/20200528/20200528153744_dl8b.png',
-        text2:
-          'https://ipi-mzh.oss-cn-hangzhou.aliyuncs.com/file/upload/mango/20200528/20200528153744_dl8b.png'
+        user: {
+          imgUrl:
+            'https://ipi-mzh.oss-cn-hangzhou.aliyuncs.com/file/upload/mango/20200528/20200528153744_dl8b.png',
+          toUrl: ''
+        },
+        vip: {
+          imgUrl:
+            'https://ipi-mzh.oss-cn-hangzhou.aliyuncs.com/file/upload/mango/20200528/20200528153744_dl8b.png',
+          toUrl: ''
+        }
       }
     ]
   },
   methods: {
     addItem () {
-      if (this.textList.length <= 5) {
-        this.textList.push({ text1: '', text2: '' })
+      if (this.bannerList.length <= 5) {
+        this.bannerList.push({
+          user: {
+            imgUrl: '',
+            toUrl: ''
+          },
+          vip: {
+            imgUrl: '',
+            toUrl: ''
+          }
+        })
       }
-      if (this.textList.length === 6) {
+      if (this.bannerList.length === 6) {
         this.showAddBtn = false
       }
     },
-    deleteHandler (textIndex) {
-      console.log(textIndex, '0000')
-      this.textList.splice(textIndex, 1)
-      if (this.textList.length <= 5) {
+    deleteHandler (bannerIndex) {
+      console.log(bannerIndex, '0000')
+      this.bannerList.splice(bannerIndex, 1)
+      if (this.bannerList.length <= 5) {
         this.showAddBtn = true
       }
-      if (this.textList.length >= 6) {
+      if (this.bannerList.length >= 6) {
         this.showAddBtn = false
       }
-      if (this.textList.length === 0) {
-        this.textList.push({ text1: '', text2: '' })
+      if (this.bannerList.length === 0) {
+        this.bannerList.push({ text1: '', text2: '' })
       }
     },
     handleClick (tab) {
       if (tab.index === '0') {
         console.log('第一个')
-        this.textList = [
+        this.bannerList = [
           {
-            text1:
-              'https://ipi-mzh.oss-cn-hangzhou.aliyuncs.com/file/upload/mango/20200528/20200528153744_dl8b.png',
-            text2:
-              'https://ipi-mzh.oss-cn-hangzhou.aliyuncs.com/file/upload/mango/20200528/20200528153744_dl8b.png'
+            user: {
+              imgUrl:
+                'https://ipi-mzh.oss-cn-hangzhou.aliyuncs.com/file/upload/mango/20200528/20200528153744_dl8b.png',
+              toUrl: ''
+            },
+            vip: {
+              imgUrl:
+                'https://ipi-mzh.oss-cn-hangzhou.aliyuncs.com/file/upload/mango/20200528/20200528153744_dl8b.png',
+              toUrl: ''
+            }
           }
         ]
       }
       if (tab.index === '1') {
         console.log('第二个')
-        this.textList = [
+        this.bannerList = [
           {
-            text1:
-              'https://ipi-mzh.oss-cn-hangzhou.aliyuncs.com/file/upload/mango/20200528/20200528154711_9xyk.png',
-            text2:
-              'https://ipi-mzh.oss-cn-hangzhou.aliyuncs.com/file/upload/mango/20200528/20200528154711_9xyk.png'
+            user: {
+              imgUrl:
+                'https://ipi-mzh.oss-cn-hangzhou.aliyuncs.com/file/upload/mango/20200528/20200528154711_9xyk.png',
+              toUrl: ''
+            },
+            vip: {
+              imgUrl:
+                'https://ipi-mzh.oss-cn-hangzhou.aliyuncs.com/file/upload/mango/20200528/20200528154711_9xyk.png',
+              toUrl: ''
+            }
           }
         ]
       }
       if (tab.index === '2') {
         console.log('第三个')
-        this.textList = [
+        this.bannerList = [
           {
-            text1:
-              'https://ipi-mzh.oss-cn-hangzhou.aliyuncs.com/file/upload/mango/20200528/20200528155821_kbu9.png',
-            text2:
-              'https://ipi-mzh.oss-cn-hangzhou.aliyuncs.com/file/upload/mango/20200528/20200528155821_kbu9.png'
+            user: {
+              imgUrl:
+                'https://ipi-mzh.oss-cn-hangzhou.aliyuncs.com/file/upload/mango/20200528/20200528155821_kbu9.png',
+              toUrl: ''
+            },
+            vip: {
+              imgUrl:
+                'https://ipi-mzh.oss-cn-hangzhou.aliyuncs.com/file/upload/mango/20200528/20200528155821_kbu9.png',
+              toUrl: ''
+            }
           }
         ]
       }
       if (tab.index === '3') {
         console.log('第四个')
-        this.textList = [
+        this.bannerList = [
           {
-            text1:
-              'https://ipi-mzh.oss-cn-hangzhou.aliyuncs.com/file/upload/mango/20200528/20200528162346_xvct.png',
-            text2:
-              'https://ipi-mzh.oss-cn-hangzhou.aliyuncs.com/file/upload/mango/20200528/20200528162346_xvct.png'
+            user: {
+              imgUrl:
+                'https://ipi-mzh.oss-cn-hangzhou.aliyuncs.com/file/upload/mango/20200528/20200528162346_xvct.png',
+              toUrl: ''
+            },
+            vip: {
+              imgUrl:
+                'https://ipi-mzh.oss-cn-hangzhou.aliyuncs.com/file/upload/mango/20200528/20200528162346_xvct.png',
+              toUrl: ''
+            }
           }
         ]
       }
@@ -189,7 +234,11 @@ export default {
 .add-btn {
   width: 80px;
   height: 80px;
-  // border: 1px solid red;
+  font-size: 30px;
+  color: #8c939d;
+  text-align: center;
+  line-height: 80px;
+  border: 1px dotted #8c939d;
 }
 
 .el-input {
@@ -250,5 +299,9 @@ export default {
 
 .el-input {
   width: 30%;
+}
+
+.el-switch {
+  margin-left: 30px;
 }
 </style>
